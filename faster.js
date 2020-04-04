@@ -2,16 +2,17 @@
 // @name         黄金右键
 // @description  按住右键→倍速播放, 松开右键→恢复原样, 灵活追剧看视频~ 支持b站、YouTube、优酷...
 // @namespace    http://tampermonkey.net/
-// @version      0.2.0
+// @version      1.0.2
 // @author       SkyJin
 // @include    https://www.bilibili.com/*
 // @include    https://www.youtube.com/*
 // @include    https://v.youku.com/v_show/id_*
 // @include    https://www.iqiyi.com/*
+// @include    https://v.qq.com/*
 // @grant        none
 // ==/UserScript==
 
-(async function() {
+(function () {
     'use strict';
 
     let down_count = 0
@@ -42,11 +43,28 @@
         }
         return true
     }
+    const relativeEvent = {
+        // 目前针对腾讯视频
+        _stopper: e => e.stopPropagation(),
+        prevent () {
+            document.body.addEventListener('ratechange', this._stopper, true)
+            document.body.addEventListener('timeupdate', this._stopper, true)
+        },
+        allow () {
+            document.body.removeEventListener('ratechange', this._stopper, true)
+            document.body.removeEventListener('timeupdate', this._stopper, true)
+        }
+    }
     const downEvent = async e => {
         if (e.keyCode !== 39) return
         e.stopPropagation()
-        
-        if (++down_count === 2 && await checkPageVideo()) {
+
+        // 计数+1
+        down_count++
+
+        // 长按右键-开始
+        if (down_count === 2 && await checkPageVideo()) {
+            relativeEvent.prevent()
             normal_rate = page_video.playbackRate
             page_video.playbackRate = faster_rate
             console.log('加速播放中')
@@ -55,18 +73,27 @@
     const upEvent = async e => {
         if (e.keyCode !== 39) return
         e.stopPropagation()
-        
+
+        // 单击右键时
         if (down_count === 1 && await checkPageVideo()) {
             page_video.currentTime += add_time
             console.log('前进' + add_time + '秒')
         }
-        
-        down_count = 0
-        page_video.playbackRate = normal_rate
-    }
-    
-    page_video = await getPageVideo()
-    document.body.addEventListener('keydown', downEvent, true)
-    document.body.parentElement.addEventListener('keyup', upEvent, true)
 
+        // 长按右键-结束
+        if (page_video.playbackRate !== normal_rate) {
+            page_video.playbackRate = normal_rate
+            relativeEvent.allow()
+        }
+
+        // 计数-重置
+        down_count = 0
+    }
+    const init = async () => {
+        page_video = await getPageVideo()
+        document.body.addEventListener('keydown', downEvent, true)
+        document.body.parentElement.addEventListener('keyup', upEvent, true)
+    }
+
+    init()
 })();
