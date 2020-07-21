@@ -2,7 +2,7 @@
 // @name         黄金右键
 // @description  按住右键→倍速播放, 松开右键→恢复原样, 灵活追剧看视频~ 支持b站、YouTube、腾讯视频、优酷...
 // @namespace    http://tampermonkey.net/
-// @version      1.0.2
+// @version      1.0.3
 // @author       SkyJin
 // @include    https://www.bilibili.com/*
 // @include    https://www.youtube.com/*
@@ -44,8 +44,9 @@
         return true
     }
     const relativeEvent = {
-        // 目前针对腾讯视频
         _stopper: e => e.stopPropagation(),
+        // 目前针对腾讯视频
+        shouldPrevent: location.origin.indexOf('qq.com') > -1,
         prevent () {
             document.body.addEventListener('ratechange', this._stopper, true)
             document.body.addEventListener('timeupdate', this._stopper, true)
@@ -64,7 +65,7 @@
 
         // 长按右键-开始
         if (down_count === 2 && await checkPageVideo()) {
-            relativeEvent.prevent()
+            relativeEvent.shouldPrevent && relativeEvent.prevent()
             normal_rate = page_video.playbackRate
             page_video.playbackRate = faster_rate
             console.log('加速播放中')
@@ -83,7 +84,7 @@
         // 长按右键-结束
         if (page_video.playbackRate !== normal_rate) {
             page_video.playbackRate = normal_rate
-            relativeEvent.allow()
+            relativeEvent.shouldPrevent && relativeEvent.allow()
         }
 
         // 计数-重置
