@@ -2,13 +2,10 @@
 // @name         黄金右键
 // @description  按住右键→倍速播放, 松开右键→恢复原样, 灵活追剧看视频~ 支持b站、YouTube、腾讯视频、优酷...
 // @namespace    http://tampermonkey.net/
-// @version      1.0.3
+// @version      1.0.4
 // @author       SkyJin
-// @include    https://www.bilibili.com/*
-// @include    https://www.youtube.com/*
-// @include    https://v.youku.com/v_show/id_*
-// @include    https://www.iqiyi.com/*
-// @include    https://v.qq.com/*
+// @include     http://*
+// @include     https://*
 // @grant        none
 // ==/UserScript==
 
