@@ -18,10 +18,25 @@
     const add_time = 7;
     let page_video;
 
+    function makeArray(arr) {
+        if (arr.item) {
+            var len = arr.length;
+            var array = [];
+            while (len--) {
+                array[len] = arr[len];
+            }
+            return array;
+        }
+        return Array.prototype.slice.call(arr);
+    }
     const getPageVideo = () => {
         console.log("Finding available Video Element...");
+        const allVideoElementArray = makeArray(
+            document.getElementsByTagName("video")
+        ).concat(makeArray(document.getElementsByTagName("bwp-video")));
+        console.log(allVideoElementArray);
         const page_video = Array.prototype.find.call(
-            document.getElementsByTagName("video"),
+            allVideoElementArray,
             (e) => {
                 if (checkPageVideo(e)) return e;
             }
@@ -94,7 +109,7 @@
         }
 
         // 长按右键-结束
-        if (page_video.playbackRate !== normal_rate) {
+        if (page_video && page_video.playbackRate !== normal_rate) {
             page_video.playbackRate = normal_rate;
             relativeEvent.shouldPrevent && relativeEvent.allow();
         }
@@ -104,11 +119,7 @@
     };
     const init = () => {
         document.body.addEventListener("keydown", downEvent, true);
-        document.body.parentElement.addEventListener(
-            "keyup",
-            upEvent,
-            true
-        );
+        document.body.parentElement.addEventListener("keyup", upEvent, true);
     };
 
     init();
