@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         黄金右键
+// @name         黄金右键-Golden Right
 // @description  按住"→"键倍速播放, 松开"→"键恢复原样, 灵活追剧看视频~ 支持所有H5视频的网站（YouTube、腾讯视频、优酷、番剧等）
 // @namespace    http://tampermonkey.net/
 // @version      1.0.7
