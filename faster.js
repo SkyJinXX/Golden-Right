@@ -69,7 +69,7 @@
     };
     const checkPageVideo = (v) => {
         if (v) {
-            return v.src && v.offsetWidth > 9 && !v.paused;
+            return v.offsetWidth > 9 && !v.paused;
         } else {
             return false;
         }
