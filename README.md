@@ -4,7 +4,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/Tampermonkey-Script-blue" alt="Tampermonkey Script">
-  <img src="https://img.shields.io/badge/Version-1.1.1-green" alt="Version">
+  <img src="https://img.shields.io/badge/Version-1.2.0-green" alt="Version">
   <img src="https://img.shields.io/badge/License-MIT-yellow" alt="License">
 </p>
 
